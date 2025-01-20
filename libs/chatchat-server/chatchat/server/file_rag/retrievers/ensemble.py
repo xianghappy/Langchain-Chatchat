@@ -17,7 +17,7 @@ class EnsembleRetrieverService(BaseRetrieverService):
         self.vs = None
         self.top_k = top_k
         self.retriever = retriever
-
+    '''
     @staticmethod
     def from_vectorstore(
         vectorstore: VectorStore,
@@ -43,6 +43,20 @@ class EnsembleRetrieverService(BaseRetrieverService):
             retrievers=[bm25_retriever, faiss_retriever], weights=[0.5, 0.5]
         )
         return EnsembleRetrieverService(retriever=ensemble_retriever, top_k=top_k)
+    '''
+    
+    @staticmethod
+    def from_vectorstore(
+        vectorstore: VectorStore,
+        top_k: int,
+        score_threshold: int | float,
+    ):
+        # 只使用faiss检索,不使用bm25检索,减少检索时间
+        faiss_retriever = vectorstore.as_retriever(
+            search_type="similarity_score_threshold",
+            search_kwargs={"score_threshold": score_threshold, "k": top_k},
+        )
+        return EnsembleRetrieverService(retriever=faiss_retriever)
 
     def get_relevant_documents(self, query: str):
         return self.retriever.get_relevant_documents(query)[: self.top_k]

@@ -489,6 +489,7 @@ def get_kb_file_details(kb_name: str) -> List[Dict]:
             "in_db": False,
         }
     lower_names = {x.lower(): x for x in result}
+    '''
     for doc in files_in_db:
         doc_detail = get_file_detail(kb_name, doc)
         if doc_detail:
@@ -498,7 +499,7 @@ def get_kb_file_details(kb_name: str) -> List[Dict]:
             else:
                 doc_detail["in_folder"] = False
                 result[doc] = doc_detail
-
+    '''
     data = []
     for i, v in enumerate(result.values()):
         v["No"] = i + 1
